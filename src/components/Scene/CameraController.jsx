@@ -143,14 +143,15 @@ export default function CameraController() {
       makeDefault
       // map-like interaction: LEFT CLICK should PAN (DRAG), RIGHT CLICK should ROTATE
       mouseButtons={{
-        LEFT: THREE.MOUSE.ROTATE,
+        LEFT: THREE.MOUSE.PAN,
         MIDDLE: THREE.MOUSE.DOLLY,
-        RIGHT: THREE.MOUSE.PAN,
+        RIGHT: THREE.MOUSE.ROTATE,
       }}
       touches={{
-        ONE: THREE.TOUCH.ROTATE,
-        TWO: THREE.TOUCH.DOLLY_PAN
+        ONE: THREE.TOUCH.PAN,
+        TWO: THREE.TOUCH.DOLLY_ROTATE
       }}
+      screenSpacePanning={false}
       enableRotate={true}
     />
   );
