@@ -20,7 +20,7 @@ function Ground() {
 function SiteBase() {
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.12, 0]} receiveShadow>
-      <planeGeometry args={[300, 300]} />
+      <planeGeometry args={[500, 500]} />
       <meshStandardMaterial color="#1d1d1d" roughness={0.95} />
     </mesh>
   );
@@ -41,13 +41,15 @@ export default function Scene() {
         fov: 52,
         near: 0.5,
         far: 2000,
-        position: [0, 120, 110], // Centered gaze
+        position: [0, 120, 110], 
       }}
       gl={{
         antialias: true,
         toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 1.1,
+        toneMappingExposure: 0.9,
         outputColorSpace: THREE.SRGBColorSpace,
+        powerPreference: "high-performance",
+        stencil: false,
       }}
       onPointerMissed={() => selectPlot(null)}
       style={{ background: '#111111' }}
@@ -55,23 +57,19 @@ export default function Scene() {
       {/* ── Lighting ── */}
       <directionalLight
         position={[80, 130, 60]}
-        intensity={2.0}
+        intensity={1.5}
         color="#fff5e0"
         castShadow
-        shadow-mapSize={[2048, 2048]}
-        shadow-camera-far={500}
-        shadow-camera-left={-200}
-        shadow-camera-right={200}
-        shadow-camera-top={200}
-        shadow-camera-bottom={-200}
+        shadow-mapSize={[1024, 1024]}
+        shadow-camera-far={400}
+        shadow-camera-left={-150}
+        shadow-camera-right={150}
+        shadow-camera-top={150}
+        shadow-camera-bottom={-150}
+        shadow-bias={-0.0005}
       />
-      <directionalLight
-        position={[-80, 80, -60]}
-        intensity={0.5}
-        color="#c8d8f0"
-      />
-      <ambientLight intensity={0.9} color="#ffffff" />
-      <hemisphereLight skyColor="#28283c" groundColor="#0a0a0a" intensity={0.6} />
+      <ambientLight intensity={0.7} color="#ffffff" />
+      <hemisphereLight skyColor="#28283c" groundColor="#0a0a0a" intensity={0.5} />
 
       {/* ── Atmosphere ── */}
       <fog attach="fog" args={['#111111', 250, 700]} />

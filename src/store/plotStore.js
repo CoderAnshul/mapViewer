@@ -18,7 +18,9 @@ const usePlotStore = create((set, get) => ({
   searchQuery: '',
   showUpload: false,
   showGallery: false,
+  showInfo: false,
   isLoading: false,
+  projectInfo: null,
 
   // ── Camera State ──
   cameraTarget: null, // { position: [x,y,z], lookAt: [x,y,z] }
@@ -34,6 +36,7 @@ const usePlotStore = create((set, get) => ({
     commonAreas: data.commonAreas || [],
     treePositions: data.treePositions || [],
     gallery: data.gallery || [],
+    projectInfo: data.info || null,
   }),
 
   selectPlot: (plot) => {
@@ -59,6 +62,7 @@ const usePlotStore = create((set, get) => ({
   setSearchQuery: (q) => set({ searchQuery: q }),
   setShowUpload: (v) => set({ showUpload: v }),
   setShowGallery: (v) => set({ showGallery: v }),
+  setShowInfo: (v) => set({ showInfo: v }),
   setIsLoading: (v) => set({ isLoading: v }),
   
   triggerReset: () => set({ 

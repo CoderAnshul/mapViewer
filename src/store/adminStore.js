@@ -58,6 +58,15 @@ const useAdminStore = create(
 
       getProject: (id) => get().projects.find((p) => p.id === id),
 
+      // ── Project Metadata ──
+      updateProjectInfo: (projectId, updates) => {
+        set((s) => ({
+          projects: s.projects.map((p) =>
+            p.id === projectId ? { ...p, ...updates } : p
+          ),
+        }));
+      },
+
       // ── Gallery Management ──
       addGalleryImage: (projectId, imageData) => {
         set((s) => ({

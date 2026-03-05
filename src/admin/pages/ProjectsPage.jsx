@@ -86,11 +86,11 @@ function CreateModal({ onClose, onCreate }) {
           <div className="flex gap-2 pt-2">
             <button type="button" onClick={onClose}
               className="flex-1 py-3 rounded-xl text-white/30 text-[10px] font-bold uppercase tracking-widest hover:text-white transition-colors">
-              Abort
+              Close
             </button>
             <button type="submit"
               className="flex-1 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-blue-600 text-white hover:bg-blue-500 transition-all">
-              Initialize
+              Proceed
             </button>
           </div>
         </form>

@@ -2,11 +2,14 @@ import { useRef, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
   LayoutGrid, FolderOpen, UserCheck, BarChart3, LogOut, 
-  Search, Bell, Settings, Map, CheckCircle, Activity
+  Search, Bell, Settings, Map, CheckCircle, Activity,
+  Image as ImageIcon, Info
 } from 'lucide-react';
 import gsap from 'gsap';
 import ProjectsPage from './pages/ProjectsPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
+import AssetsManagerPage from './pages/AssetsManagerPage';
+import InfoConfigPage from './pages/InfoConfigPage';
 
 // ── Placeholder Pages ────────────────────────────────────────────────────────
 const DashboardPage = () => {
@@ -131,13 +134,8 @@ export default function AdminApp() {
         <nav className="flex flex-col gap-1.5 flex-1 overflow-y-auto scrollbar-hide">
           <SidebarLink to="/admin" icon={LayoutGrid} label="Dashboard" active={location.pathname === '/admin'} />
           <SidebarLink to="/admin/projects" icon={FolderOpen} label="Projects" active={location.pathname === '/admin/projects' || location.pathname.includes('/admin/project/')} />
-          
-          <div className="mt-8 mb-3 px-4">
-            <span className="text-[9px] uppercase tracking-[0.2em] text-white/20 font-black">Management</span>
-          </div>
-          
-          <SidebarLink to="/admin/users" icon={UserCheck} label="Team" active={location.pathname === '/admin/users'} />
-          <SidebarLink to="/admin/analytics" icon={BarChart3} label="Analytics" active={location.pathname === '/admin/analytics'} />
+          <SidebarLink to="/admin/assets" icon={ImageIcon} label="Gallery" active={location.pathname === '/admin/assets'} />
+          <SidebarLink to="/admin/info" icon={Info} label="Marketing Info" active={location.pathname === '/admin/info'} />
 
           <div className="mt-auto pt-6 border-t border-white/5">
             <SidebarLink to="/" icon={Map} label="Live View" active={false} />
@@ -189,8 +187,8 @@ export default function AdminApp() {
               <Route index element={<DashboardPage />} />
               <Route path="projects" element={<ProjectsPage />} />
               <Route path="project/:id" element={<ProjectDetailPage />} />
-              <Route path="users" element={<UserAccessPage />} />
-              <Route path="analytics" element={<AnalyticsPage />} />
+              <Route path="assets" element={<AssetsManagerPage />} />
+              <Route path="info" element={<InfoConfigPage />} />
             </Routes>
           </main>
 

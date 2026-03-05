@@ -37,52 +37,56 @@ export default function Gallery() {
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 animate-fade-in">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/80 backdrop-blur-xl"
         onClick={() => setShowGallery(false)}
       />
 
       {/* Main Container */}
-      <div className="relative w-full max-w-6xl h-full flex flex-col pointer-events-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6 z-10">
-          <div className="flex flex-col">
-            <h2 className="text-white text-2xl font-black tracking-tight" style={{ fontFamily: 'Outfit, sans-serif' }}>
-              Project Gallery
-            </h2>
-            <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em]">
-              Architectural Visualizations & Amenities
-            </p>
-          </div>
-          <button 
+      <div className="relative w-full max-w-6xl h-full flex flex-col pointer-events-auto bg-[#111]/40 border border-white/5 rounded-[40px] p-8 md:p-12">
+        <button 
             onClick={() => setShowGallery(false)}
-            className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center text-white/50 hover:bg-white/20 hover:text-white transition-all"
-          >
-            <X size={20} />
-          </button>
+            className="absolute top-8 right-8 w-12 h-12 bg-white/5 rounded-full flex items-center justify-center text-white/50 hover:bg-white/20 hover:text-white transition-all z-20"
+        >
+            <X size={24} />
+        </button>
+
+        {/* Header */}
+        <div className="flex flex-col mb-10 z-10">
+          <h2 className="text-white text-4xl font-black tracking-tighter mb-2" style={{ fontFamily: 'Outfit, sans-serif' }}>
+            Aesthetic Living
+          </h2>
+          <div className="flex items-center gap-3">
+             <div className="h-[1px] w-12 bg-blue-600" />
+             <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.4em]">
+               PROJECT ASSETS & AMENITIES
+             </p>
+          </div>
         </div>
 
         {/* Image Grid */}
-        <div className="flex-1 overflow-y-auto scrollbar-hide pb-10">
+        <div className="flex-1 overflow-y-auto scrollbar-hide pr-2">
           {galleryImages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-white/20">
-              <Maximize2 size={48} className="mb-4 opacity-50" />
-              <p className="font-black text-xs uppercase tracking-widest">No images uploaded yet.</p>
+            <div className="h-full flex flex-col items-center justify-center text-white/10 decoration-dashed">
+              <Maximize2 size={64} className="mb-6 opacity-20" />
+              <p className="font-black text-[10px] uppercase tracking-[0.4em]">Cinematic assets coming soon.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {galleryImages.map((img, idx) => (
                 <div 
                   key={img.id}
                   onClick={() => setSelectedIdx(idx)}
-                  className="group relative aspect-[16/10] bg-white/5 rounded-2xl overflow-hidden cursor-pointer border border-white/5 hover:border-white/20 transition-all active:scale-95"
+                  className="group relative aspect-video bg-[#1a1a1a] rounded-3xl overflow-hidden cursor-pointer border border-white/5 hover:border-blue-500/20 transition-all active:scale-95 shadow-2xl"
                 >
                   <img 
                     src={img.url} 
                     alt={`Gallery ${idx}`}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                    <span className="text-white text-[10px] font-bold uppercase tracking-widest">View Image</span>
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                     <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center scale-90 group-hover:scale-100 transition-transform">
+                        <Maximize2 size={18} className="text-white" />
+                     </div>
                   </div>
                 </div>
               ))}

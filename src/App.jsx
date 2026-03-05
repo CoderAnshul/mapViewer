@@ -12,6 +12,7 @@ import useAdminStore from './store/adminStore';
 import { generateDefaultPlots } from './data/defaultPlots';
 import { roads as defaultRoads, commonAreas as defaultCommonAreas, treePositions as defaultTrees } from './data/defaultPlots';
 import Gallery from './components/UI/Gallery';
+import ProjectInfo from './components/UI/ProjectInfo';
 
 function LoadingScreen() {
   return (
@@ -56,6 +57,7 @@ export default function App() {
   const setLayout = usePlotStore((s) => s.setLayout);
   const showUpload = usePlotStore((s) => s.showUpload);
   const showGallery = usePlotStore((s) => s.showGallery);
+  const showInfo = usePlotStore((s) => s.showInfo);
   const getProject = useAdminStore((s) => s.getProject);
 
   useEffect(() => {
@@ -69,6 +71,15 @@ export default function App() {
           commonAreas: project.commonAreas || [],
           treePositions: project.treePositions || [],
           gallery: project.gallery || [],
+          info: {
+            subtitle: project.subtitle,
+            description: project.description,
+            developerName: project.developerName,
+            developerLogo: project.developerLogo,
+            otherProjectName: project.otherProjectName,
+            otherProjectUrl: project.otherProjectUrl,
+            otherProjectImage: project.otherProjectImage
+          }
         });
         return;
       }
@@ -96,6 +107,7 @@ export default function App() {
       <PlotPopup />
       {showUpload && <UploadPanel />}
       {showGallery && <Gallery />}
+      {showInfo && <ProjectInfo />}
 
       {/* Vignette */}
       <div

@@ -23,6 +23,7 @@ export default function ControlPanel() {
   const searchQuery = usePlotStore((s) => s.searchQuery);
   const setShowUpload = usePlotStore((s) => s.setShowUpload);
   const setShowGallery = usePlotStore((s) => s.setShowGallery);
+  const setShowInfo = usePlotStore((s) => s.setShowInfo);
 
   const toggleStatus = usePlotStore((s) => s.toggleStatus);
   const setViewMode = usePlotStore((s) => s.setViewMode);
@@ -134,7 +135,11 @@ export default function ControlPanel() {
             </div>
             <span>Gallery</span>
           </button>
-          <button className="action-btn flex-1" title="Info">
+          <button 
+            className="action-btn flex-1" 
+            title="Info"
+            onClick={() => setShowInfo(true)}
+          >
             <Info size={13} />
             <span>Info</span>
           </button>

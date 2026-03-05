@@ -1,6 +1,6 @@
-import { useRef, useState, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useRef, useState, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
+import gsap from 'gsap';
 import usePlotStore from '../../store/plotStore';
 import { STATUS_COLORS } from '../../utils/constants';
 import PlotLabel, { SurfaceLabel } from './PlotLabel';
@@ -24,7 +24,6 @@ function createExtrudedGeo(vertices, height = 0.35) {
 export default function PlotMesh({ plot }) {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
-  const currentY = useRef(0);
 
   const selectedPlot = usePlotStore((s) => s.selectedPlot);
   const showStatus = usePlotStore((s) => s.showStatus);
@@ -36,10 +35,10 @@ export default function PlotMesh({ plot }) {
 
   // Plot color
   const color = useMemo(() => {
-    if (isSelected) return STATUS_COLORS.selected;
-    if (plot.isAmenity) return '#2E7D32'; // Forest Green for amenities
+    if (isSelected) return '#1a3a6c'; // Dark Blue for selection
+    if (plot.isAmenity) return '#316d2f'; // Green for gardens
     if (showStatus) return STATUS_COLORS[plot.status] || STATUS_COLORS.ninfo;
-    return STATUS_COLORS.default;
+    return '#d2c9b1'; // Original Tan
   }, [isSelected, showStatus, plot.status, plot.isAmenity]);
 
   // Box dimensions for rectangular plots
@@ -56,13 +55,16 @@ export default function PlotMesh({ plot }) {
     return createExtrudedGeo(plot.vertices, plot.height || 0.35);
   }, [plot.vertices, isRect, plot.height]);
 
-  // Hover lift animation
-  useFrame(() => {
+  // USE GSAP for the lift animation instead of useFrame
+  useEffect(() => {
     if (!meshRef.current) return;
-    const target = hovered || isSelected ? 0.35 : 0; 
-    currentY.current += (target - currentY.current) * 0.14;
-    meshRef.current.position.y = currentY.current;
-  });
+    const targetY = (hovered || isSelected) ? 0.35 : 0;
+    gsap.to(meshRef.current.position, {
+      y: targetY,
+      duration: 0.4,
+      ease: 'power2.out'
+    });
+  }, [hovered, isSelected]);
 
   const cx = plot.center[0];
   const cz = plot.center[1];
@@ -91,32 +93,28 @@ export default function PlotMesh({ plot }) {
     document.body.style.cursor = 'auto';
   };
 
-  // Calculate rotation to align with plot orientation (Designer Style)
+  // Calculate rotation to align with plot orientation
   const rotationY = useMemo(() => {
     if (plot.vertices.length < 2) return 0;
     const pw = plot.width || 0;
     const pd = plot.depth || 0;
     
-    // Only rotate if the plot is skinny/long enough to warrant it
     if (Math.abs(pw - pd) < minDim * 0.3) return 0;
 
     const [x1, z1] = plot.vertices[0];
     const [x2, z2] = plot.vertices[1];
     let angle = Math.atan2(z1 - z2, x2 - x1); 
     
-    // Snap to 90deg increments if close, keep it upright
     if (angle > Math.PI / 2) angle -= Math.PI;
     if (angle < -Math.PI / 2) angle += Math.PI;
     
     return angle;
   }, [plot.vertices, plot.width, plot.depth, minDim]);
 
-  const viewMode = usePlotStore((s) => s.viewMode);
-  const labelColor = isSelected ? '#ffffff' : showStatus ? '#ffffff' : '#2a1500';
+  const labelColor = isSelected ? '#ffffff' : showStatus ? '#ffffff' : '#2a2a2a';
 
   return (
     <group>
-      {/* ── Plot mesh ── */}
       {isRect ? (
         <mesh
           ref={meshRef}
@@ -124,51 +122,48 @@ export default function PlotMesh({ plot }) {
           onClick={handleClick}
           onPointerOver={handlePointerOver}
           onPointerOut={handlePointerOut}
-          castShadow
           receiveShadow
         >
           <boxGeometry args={boxArgs} />
           <meshStandardMaterial
             color={color}
-            roughness={0.55}
-            metalness={0.04}
-            emissive={isSelected ? '#062040' : hovered ? '#120f00' : '#000000'}
-            emissiveIntensity={isSelected ? 0.5 : hovered ? 0.1 : 0}
+            roughness={1}
+            metalness={0.0}
+            emissive={isSelected ? '#1a2a4d' : hovered ? '#e0e0e0' : '#000000'}
+            emissiveIntensity={isSelected ? 0.3 : hovered ? 0.1 : 0}
           />
         </mesh>
       ) : (
         <mesh
-          ref={meshRef}
           geometry={extrudedGeo}
+          position={[0, 0, 0]}
+          ref={meshRef}
           onClick={handleClick}
           onPointerOver={handlePointerOver}
           onPointerOut={handlePointerOut}
-          castShadow
           receiveShadow
         >
           <meshStandardMaterial
             color={color}
-            roughness={0.55}
-            metalness={0.04}
-            emissive={isSelected ? '#062040' : hovered ? '#120f00' : '#000000'}
-            emissiveIntensity={isSelected ? 0.5 : hovered ? 0.1 : 0}
+            roughness={1}
+            metalness={0.0}
+            emissive={isSelected ? '#1a2a4d' : hovered ? '#e0e0e0' : '#000000'}
+            emissiveIntensity={isSelected ? 0.3 : hovered ? 0.1 : 0}
           />
         </mesh>
       )}
 
-      {/* ── Surface Label: Styled like the reference screenshots ── */}
       <SurfaceLabel
         position={[cx, 0.42, cz]}
         rotation={[-Math.PI / 2, 0, rotationY]}
         text={plot.number}
-        // Triple line when selected, double line otherwise
         subText={isSelected ? `${plot.area_sqm || 0} m²` : `${plot.area_sqft || 0} ft²`}
         extraText={isSelected ? `${plot.area_sqft || 0} ft²` : null}
         color={labelColor}
         opacity={isSelected || hovered ? 1 : 0.8}
-        // Increase scale when selected to show more detail clearly
-        scale={isSelected ? [labelScale * 1.5, labelScale * 1.5, 1] : [labelScale * 0.95, labelScale * 0.95, 1]}
+        scale={isSelected ? [labelScale * 1.5, labelScale * 1.5, 1] : [labelScale, labelScale, 1]}
       />
     </group>
   );
 }
+

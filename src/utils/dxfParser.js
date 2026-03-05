@@ -118,10 +118,15 @@ export async function parseDXF(fileText) {
       const v = getVertices(e);
       if (!v) return;
 
-      const isRoad = layer.includes('ROAD') || layer.includes('STREET') || layer.includes('PATH') || layer.includes('WAY') || layer.includes('HIGHWAY') || layer.includes('RAIL') || layer.includes('DRIVE') || layer.includes('ASPHALT');
-      const isWater = layer.includes('WATER') || layer.includes('RIVER') || layer.includes('LAKE') || layer.includes('CANAL');
-      const isGreen = layer.includes('PARK') || layer.includes('GREEN') || layer.includes('LANDUSE') || layer.includes('VEGETATION') || layer.includes('FOREST') || layer.includes('GARDEN');
-      const isBuilding = layer.includes('BUILDING') || layer.includes('BLDG') || layer.includes('STRUCT');
+      const roadKeywords = /ROAD|STREET|PATH|WAY|HIGHWAY|RAIL|DRIVE|ASPHALT|MOTORWAY|PRIMARY|SECONDARY|TERTIARY|RESIDENTIAL|UNCLASSIFIED|SERVICE|TRUNK|TRAFFIC|PAVEMENT| RD| ST|AVE|PKWY|V_ROAD|V_HIGH|LANE|LN|ALLE|STRE|CARR/i;
+      const waterKeywords = /WATER|RIVER|LAKE|CANAL|STREAM|BLUE|POND|RESERV/i;
+      const greenKeywords = /PARK|GREEN|LANDUSE|VEGETATION|FOREST|GARDEN|WOOD|LEISURE|GOLF|GRASS/i;
+      const bldgKeywords  = /BUILDING|BLDG|STRUCT|AREA|ROOF|WALL|SHELTER/i;
+
+      const isRoad = roadKeywords.test(layer);
+      const isWater = waterKeywords.test(layer);
+      const isGreen = greenKeywords.test(layer);
+      const isBuilding = bldgKeywords.test(layer);
 
       // Detect Height
       let height = hasGlobal3D ? 0.35 : 0; 
